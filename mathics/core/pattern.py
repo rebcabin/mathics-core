@@ -173,11 +173,8 @@ class AtomPattern(Pattern):
     def get_match_symbol_candidates(
         self, leaves, expression, attributes, evaluation, vars={}
     ):
-        return [
-            leaf
-            for leaf in leaves
-            if (isinstance(leaf, Symbol) and leaf.name == self.atom.name)
-        ]
+        atom = self.atom
+        return [leaf for leaf in leaves if leaf is atom]
 
     def match(
         self,
