@@ -2113,7 +2113,7 @@ class Symbol(Atom):
         """Mathics SameQ"""
         # If Symbols where singlentons, it should be
         # enough to compare ids...
-        return isinstance(rhs, Symbol) and (rhs is self)
+        return self is rhs
 
     def replace_vars(self, vars, options={}, in_scoping=True):
         assert all(fully_qualified_symbol_name(v) for v in vars)

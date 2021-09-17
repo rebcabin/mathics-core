@@ -144,7 +144,7 @@ class AtomPattern(Pattern):
     def __init__(self, expr):
         self.atom = expr
         self.expr = expr
-        if isinstance(expr, Symbol):
+        if type(expr) is Symbol:
             self.match = self.match_symbol
             self.get_match_candidates = self.get_match_symbol_candidates
 
