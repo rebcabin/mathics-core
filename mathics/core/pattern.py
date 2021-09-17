@@ -138,9 +138,32 @@ class AtomPattern(Pattern):
     def __init__(self, expr):
         self.atom = expr
         self.expr = expr
+        if type(expr) is Symbol:
+            self.match = self.match_symbol
+            self.get_match_candidates = self.get_match_symbol_candidates
 
     def __repr__(self):
         return "<AtomPattern: %s>" % self.atom
+
+    def match_symbol(
+        self,
+        yield_func,
+        expression,
+        vars,
+        evaluation,
+        head=None,
+        leaf_index=None,
+        leaf_count=None,
+        fully=True,
+        wrap_oneid=True,
+    ):
+        return self.atom is expression
+
+    def get_match_symbol_candidates(
+        self, leaves, expression, attributes, evaluation, vars={}
+    ):
+        atom = self.atom
+        return [leaf for leaf in leaves if leaf is atom]
 
     def match(
         self,

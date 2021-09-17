@@ -2069,7 +2069,7 @@ class Symbol(Atom):
 
     def sameQ(self, rhs: Any) -> bool:
         """Mathics SameQ"""
-        return id(self) == id(rhs) or isinstance(rhs, Symbol) and self.name == rhs.name
+        return self is rhs
 
     def replace_vars(self, vars, options={}, in_scoping=True):
         assert all(fully_qualified_symbol_name(v) for v in vars)
