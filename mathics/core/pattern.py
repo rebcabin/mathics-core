@@ -165,7 +165,8 @@ class AtomPattern(Pattern):
     ):
         # Here also would get some advantage singletonizing symbols.
         # if id(expression) == id(atom)
-        if isinstance(expression, Symbol) and expression.name == self.atom.name:
+        # if isinstance(expression, Symbol) and expression.name == self.atom.name:
+        if self.atom is expression:
             # yield vars, None
             yield_func(vars, None)
 
