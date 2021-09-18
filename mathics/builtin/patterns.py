@@ -959,14 +959,17 @@ class Pattern_(PatternObject):
     }
 
     def init(self, expr):
-        if len(expr.leaves) != 2:
+        expr_leaves = expr._leaves
+        if len(expr_leaves) != 2:
             self.error("patvar", expr)
-        varname = expr.leaves[0].get_name()
-        if varname is None or varname == "":
+        pat_name, pat_expr = expr_leaves
+        if type(pat_name) is not Symbol:
+            # if varname is None or varname == "":
             self.error("patvar", expr)
+        varname = pat_name.name
         super(Pattern_, self).init(expr)
         self.varname = varname
-        self.pattern = Pattern.create(expr.leaves[1])
+        self.pattern = Pattern.create(pat_expr)
 
     def __repr__(self):
         return "<Pattern: %s>" % repr(self.pattern)

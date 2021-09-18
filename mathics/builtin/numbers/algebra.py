@@ -210,7 +210,7 @@ def expand(expr, numer=True, denom=False, deep=False, **kwargs):
                 return expr
         else:
             return Expression(
-                expr.head, *[unconvert_subexprs(leaf) for leaf in expr.get_leaves()]
+                expr.head, *[unconvert_subexprs(leaf) for leaf in expr._leaves]
             )
 
     sympy_expr = convert_sympy(expr)

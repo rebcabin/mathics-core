@@ -2024,7 +2024,7 @@ class Symbol(Atom):
         return self.name
 
     def do_copy(self) -> "Symbol":
-        return Symbol(self.name)
+        return self
 
     def boxes_to_text(self, **options) -> str:
         return str(self.name)
