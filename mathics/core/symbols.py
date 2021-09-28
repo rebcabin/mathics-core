@@ -11,7 +11,7 @@ from mathics.core.convert import sympy_symbol_prefix
 
 # system_symbols('A', 'B', ...) -> ['System`A', 'System`B', ...]
 def system_symbols(*symbols) -> typing.List[str]:
-    return [ensure_context(s) for s in symbols]
+    return set(ensure_context(s) for s in symbols)
 
 
 # system_symbols_dict({'SomeSymbol': ...}) -> {'System`SomeSymbol': ...}
@@ -438,7 +438,7 @@ class BaseExpression(KeyComparable):
         if evaluation is None:
             value = self
         elif isinstance(evaluation, sympy.core.numbers.NaN):
-            return None
+            RuntimeError("evaluation should not be sympy.Nan")
         else:
             value = self.create_expression(SymbolN, self).evaluate(evaluation)
         if isinstance(value, Number):
