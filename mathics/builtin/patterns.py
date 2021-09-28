@@ -42,16 +42,20 @@ from mathics.builtin.base import Builtin, BinaryOperator, PostfixOperator, AtomB
 from mathics.builtin.base import PatternObject, PatternError
 from mathics.builtin.lists import python_levelspec, InvalidLevelspecError
 
-from mathics.core.expression import (
-    apply_N,
+
+from mathics.core.symbols import (
     Atom,
-    String,
     Symbol,
-    Expression,
+)
+from mathics.core.expression import Expression, apply_N
+from mathics.core.atoms import (
+    String,
     Number,
     Integer,
     Rational,
     Real,
+)
+from mathics.core.systemsymbols import (
     SymbolFalse,
     SymbolList,
     SymbolTrue,

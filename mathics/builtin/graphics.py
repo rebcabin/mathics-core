@@ -34,17 +34,20 @@ from mathics.builtin.colors.color_directives import (
 )
 
 from mathics.builtin.options import options_to_rules
-from mathics.core.expression import (
-    apply_N,
-    Expression,
+from mathics.core.expression import Expression, apply_N
+from mathics.core.symbols import (
+    Symbol,
+    system_symbols,
+    system_symbols_dict,
+)
+from mathics.core.atoms import (
     Integer,
     Rational,
     Real,
-    Symbol,
+)
+from mathics.core.systemsymbols import (
     SymbolList,
     SymbolMakeBoxes,
-    system_symbols,
-    system_symbols_dict,
 )
 
 from mathics.core.formatter import lookup_method
