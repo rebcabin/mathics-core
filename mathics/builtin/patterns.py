@@ -47,7 +47,7 @@ from mathics.core.symbols import (
     Atom,
     Symbol,
 )
-from mathics.core.expression import Expression, apply_N
+from mathics.core.expression import Expression
 from mathics.core.atoms import (
     String,
     Number,
@@ -62,6 +62,8 @@ from mathics.core.systemsymbols import (
 )
 from mathics.core.rules import Rule
 from mathics.core.pattern import Pattern, StopGenerator
+
+from mathics.builtin.numeric import apply_N
 
 
 class Rule_(BinaryOperator):

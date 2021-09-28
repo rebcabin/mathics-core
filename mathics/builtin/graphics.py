@@ -34,7 +34,7 @@ from mathics.builtin.colors.color_directives import (
 )
 
 from mathics.builtin.options import options_to_rules
-from mathics.core.expression import Expression, apply_N
+from mathics.core.expression import Expression
 from mathics.core.symbols import (
     Symbol,
     system_symbols,
@@ -53,6 +53,7 @@ from mathics.core.systemsymbols import (
 from mathics.core.formatter import lookup_method
 from mathics.format.asy_fns import asy_bezier
 
+from mathics.builtin.numeric import apply_N
 
 GRAPHICS_OPTIONS = {
     "AspectRatio": "Automatic",

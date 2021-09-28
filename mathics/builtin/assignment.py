@@ -1243,7 +1243,9 @@ class Clear(Builtin):
         definition.downvalues = []
         definition.subvalues = []
         definition.upvalues = []
-        definition.formatvalues = {}
+        definition.formatvalues = {
+            "": [],
+        }
         definition.nvalues = []
 
     def apply(self, symbols, evaluation):

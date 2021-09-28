@@ -11,7 +11,7 @@ from mathics.core.convert import sympy_symbol_prefix
 
 # system_symbols('A', 'B', ...) -> ['System`A', 'System`B', ...]
 def system_symbols(*symbols) -> typing.List[str]:
-    return set(ensure_context(s) for s in symbols)
+    return tuple(ensure_context(s) for s in symbols)
 
 
 # system_symbols_dict({'SomeSymbol': ...}) -> {'System`SomeSymbol': ...}

@@ -22,7 +22,7 @@ from mathics.builtin.base import (
     Test,
 )
 
-from mathics.core.expression import Expression, apply_N
+from mathics.core.expression import Expression
 from mathics.core.atoms import (
     Complex,
     Integer,
@@ -44,6 +44,7 @@ from mathics.core.systemsymbols import (
 )
 from mathics.core.numbers import min_prec, dps, SpecialValueError
 
+from mathics.builtin.numeric import apply_N
 from mathics.builtin.lists import _IterationFunction
 from mathics.core.convert import from_sympy, SympyExpression, sympy_symbol_prefix
 from mathics.builtin.scoping import dynamic_scoping

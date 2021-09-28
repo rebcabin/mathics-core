@@ -7,7 +7,7 @@ from mathics.version import __version__  # noqa used in loading to check consist
 
 from mathics.builtin.base import Builtin, PostfixOperator, SympyFunction
 
-from mathics.core.expression import Expression, apply_N
+from mathics.core.expression import Expression
 from mathics.core.atoms import (
     String,
     Integer,
@@ -29,6 +29,7 @@ from mathics.core.convert import sympy_symbol_prefix, SympyExpression, from_symp
 from mathics.core.rules import Pattern
 from mathics.core.numbers import dps
 from mathics.builtin.scoping import dynamic_scoping
+from mathics.builtin.numeric import apply_N
 from mathics import Symbol
 
 import sympy

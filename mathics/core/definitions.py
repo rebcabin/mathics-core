@@ -780,7 +780,7 @@ class Definition(object):
         if upvalues is None:
             upvalues = []
         if formatvalues is None:
-            formatvalues = {}
+            formatvalues = {"": []}
         if options is None:
             options = {}
         if nvalues is None:

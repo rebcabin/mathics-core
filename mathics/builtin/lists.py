@@ -46,7 +46,7 @@ from mathics.builtin.scoping import dynamic_scoping
 from mathics.core.convert import from_sympy
 from mathics.core.evaluation import BreakInterrupt, ContinueInterrupt, ReturnInterrupt
 
-from mathics.core.expression import Expression, structure, apply_N
+from mathics.core.expression import Expression, structure
 from mathics.core.atoms import (
     ByteArrayAtom,
     Integer,
@@ -69,6 +69,8 @@ from mathics.core.systemsymbols import (
     SymbolRule,
     SymbolSequence,
 )
+
+from mathics.builtin.numeric import apply_N
 
 
 def deletecases_with_levelspec(expr, pattern, evaluation, levelspec=1, n=-1):
