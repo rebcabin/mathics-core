@@ -40,6 +40,7 @@ from mathics.core.symbols import (
     Symbol,
     system_symbols,
     system_symbols_dict,
+    SymbolList,
 )
 from mathics.core.atoms import (
     Integer,
@@ -47,7 +48,6 @@ from mathics.core.atoms import (
     Real,
 )
 from mathics.core.systemsymbols import (
-    SymbolList,
     SymbolMakeBoxes,
 )
 
@@ -1347,6 +1347,7 @@ element_heads = frozenset(
         "Arrow",
         "BezierCurve",
         "Circle",
+        "Cone",
         "Cuboid",
         "Cylinder",
         "Disk",
@@ -1360,6 +1361,7 @@ element_heads = frozenset(
         "Sphere",
         "Style",
         "Text",
+        "Tube",
         "UniformPolyhedron",
     )
 )
