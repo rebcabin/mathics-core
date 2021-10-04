@@ -1,17 +1,8 @@
-# cython: language_level=3
 # -*- coding: utf-8 -*-
 
-from mathics.core.symbols import (
-    Symbol,
-    SymbolList,
-    SymbolMakeBoxes,
-    SymbolTrue,
-    SymbolFalse,
-    SymbolN,
-    SymbolNull,
-)
+from mathics.core.symbols import Symbol
 
-# Some other common Symbols. This list is sorted in alpabetic order.
+# Some other common Symbols. This list is sorted in alphabetic order.
 SymbolAborted = Symbol("$Aborted")
 SymbolAssociation = Symbol("Association")
 SymbolByteArray = Symbol("ByteArray")
@@ -23,8 +14,9 @@ SymbolI = Symbol("I")
 SymbolInfinity = Symbol("Infinity")
 SymbolLess = Symbol("Less")
 SymbolMachinePrecision = Symbol("MachinePrecision")
-SymbolPower = Symbol("Power")
+SymbolMakeBoxes = Symbol("MakeBoxes")
 SymbolPlus = Symbol("Plus")
+SymbolPower = Symbol("Power")
 SymbolRule = Symbol("Rule")
 SymbolSequence = Symbol("Sequence")
 SymbolTimes = Symbol("Times")

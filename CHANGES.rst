@@ -4,10 +4,18 @@ CHANGES
 Internals
 =========
 
+<<<<<<< HEAD
 * now `Expression.is_numeric()` accepts an `Evaluation` object as a parameter,
   to use the definitions.
 * To numberify expressions, the function `apply_N` was introduced in the module `mathics.builtin.numeric` to avoid the idiom `Expression("N", expr, prec).evaluate(evaluation)`. The idea is to avoid always possible, to call the Pattern matching routines to obtain the numeric value of an expression.
 * A bug coming from a failure in the order in which `mathics.core.definitions` stores the rules was fixed.
+=======
+* To speed up development, you can set ``NO_CYTHON`` to skip Cythonizing Python modules
+* ``Expression.is_numeric()`` accepts an ``Evaluation`` object as a parameter;  the definitions attribute of that is used.
+* ``apply_N`` was introduced in module ``mathics.builtin.numeric`` was used to speed up critically used built-in function ``N``. Its use reduces the use of
+  ``Expression("N", expr, prec).evaluate(evaluation)`` which is slower.
+* A bug was fixed relating to the order in which ``mathics.core.definitions`` stores the rules
+>>>>>>> origin/master
 
 
 4.0.1
@@ -17,6 +25,8 @@ New builtins
 ++++++++++++
 
 * ``Guidermannian``
+* ``Cone``
+* ``Tube``
 
 Tensor functions:
 
