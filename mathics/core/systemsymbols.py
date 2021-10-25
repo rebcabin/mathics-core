@@ -3,6 +3,7 @@
 from mathics.core.symbols import Symbol
 
 # Some other common Symbols. This list is sorted in alphabetic order.
+SymbolAll = Symbol("All")
 SymbolAborted = Symbol("$Aborted")
 SymbolAlternatives = Symbol("Alternatives")
 SymbolAssociation = Symbol("Association")
