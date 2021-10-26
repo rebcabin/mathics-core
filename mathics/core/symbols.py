@@ -162,6 +162,10 @@ class BaseExpression(KeyComparable):
 
         return ""
 
+    @property
+    def is_zero(self) -> bool:
+        return False
+
     def is_symbol(self) -> bool:
         return False
 

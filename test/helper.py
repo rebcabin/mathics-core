@@ -39,7 +39,7 @@ def check_evaluation(
 
     print(time.asctime())
     if message:
-        print((result, expected))
+        print((result, expected, message))
         assert result == expected, message
     else:
         print((result, expected))
