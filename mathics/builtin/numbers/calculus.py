@@ -26,10 +26,6 @@ from mathics.core.symbols import (
 )
 
 from mathics.core.systemsymbols import (
-    SymbolComplexInfinity,
-    SymbolD,
-    SymbolDirectedInfinity,
-    SymbolIndeterminate,
     SymbolInfinity,
     SymbolInfix,
     SymbolLeft,
@@ -52,7 +48,6 @@ from mathics.algorithm.series import (
     build_series,
     series_plus_series,
     series_times_series,
-    reduce_series_product,
     series_derivative,
 )
 import sympy
@@ -1527,7 +1522,7 @@ class Series(Builtin):
     >> Clear[s];
     We can also expand over multiple variables
     >> Series[Exp[x-y], {x, 0, 2}, {y, 0, 2}]
-     = 1 - y + 1 / 2 y ^ 2 + O[y] ^ 3 + (1 - y + 1 / 2 y ^ 2 + O[y] ^ 3) x + (1 / 2 + (-1 / 2) y + 1 / 4 y ^ 2 + O[y] ^ 3) x ^ 2 + O[x] ^ 3
+     = (1 - y + 1 / 2 y ^ 2 + O[y] ^ 3) + (1 - y + 1 / 2 y ^ 2 + O[y] ^ 3) x + (1 / 2 + (-1 / 2) y + 1 / 4 y ^ 2 + O[y] ^ 3) x ^ 2 + O[x] ^ 3
 
     """
 
@@ -1571,7 +1566,7 @@ class SeriesData(Builtin):
     >> Series[Cosh[x],{x,0,2}] + Series[Sinh[x],{x,0,3}]
      = 1 + x + 1 / 2 x ^ 2 + O[x] ^ 3
     >> Series[f[x],{x,0,2}] * g[w]
-     = g[w] f[0] + g[w] f'[0] x + g[w] f''[0] x ^ 2 / 2 + O[x] ^ 3
+     = f[0] g[w] + g[w] f'[0] x + g[w] f''[0] / 2 x ^ 2 + O[x] ^ 3
     The product of two series on the same neighbourhood of the same variable are multiplied
     >> Series[Exp[-a x],{x,0,2}] * Series[Exp[-b x],{x,0,2}]
      = 1 + (-a - b) x + (a ^ 2 / 2 + a b + b ^ 2 / 2) x ^ 2 + O[x] ^ 3
@@ -1665,7 +1660,6 @@ class SeriesData(Builtin):
         else:
             terms = [term]
 
-        print("adding ", terms, " to ", series)
         # Tries to convert each term into a series around the same
         # neighbourhood
         incompat_series = []
@@ -1737,7 +1731,7 @@ class SeriesData(Builtin):
             factors = coeff.leaves
         else:
             factors = [coeff]
-        print("Multiplying ", series, "  times ", factors)
+
         for factor in factors:
             if Integer0.sameQ(factor):
                 return Integer0
@@ -1750,55 +1744,42 @@ class SeriesData(Builtin):
                 series = (newdata, *series[1:])
                 continue
             if factor.get_head() is SymbolSeriesData:
-                print("already a series")
                 y, y0 = factor.leaves[0:2]
                 if y.sameQ(x):
-                    print("same x")
                     if not y0.sameQ(x0):
-                        print("different x0")
                         evaluation.message("Series", "icm", x, x0, y0)
-                        incompat_series.append(t)
+                        incompat_series.append(factor)
                         continue
                     else:
-                        print("same x0")
                         data_y, nmin_y, nmax_y, den_y = factor.leaves[2:]
                         nmin_val = nmin_y.get_int_value()
                         nmax_val = nmax_y.get_int_value()
                         den_val = den_y.get_int_value()
                         tseries = (data_y, nmin_val, nmax_val, den_val)
                         series_new = series_times_series(series, tseries)
-                        print("series->", series_new, "?")
                         if series_new:
                             series = series_new
                             continue
                         else:
-                            print("...   incompatible")
-                            incompat_series.append(t)
+                            incompat_series.append(factor)
                             continue
 
             # If t is not a series or is a series in a different variable,
             # try to convert it into a series in x around x0:
             factor_new = build_series(factor, x, x0, max_exponent, evaluation)
             fseries = None
-            print(" factor_new:", factor_new)
             if factor_new.get_head() is SymbolSeriesData:
-                print("good! its a series")
                 y, y0, data_y, nmin_y, nmax_y, den_y = factor_new.leaves
                 if y.sameQ(x) and y0.sameQ(x0):
-                    print("same neighbourhood")
                     nmin_val = nmin_y.get_int_value()
                     nmax_val = nmax_y.get_int_value()
                     den_val = den_y.get_int_value()
                     fseries = (data_y, nmin_val, nmax_val, den_val)
 
             if fseries is None:
-                print(
-                    'not a series or not the same variable. Building a "fake" series.'
-                )
-                data_y = Expression(SymbolList, t)
+                data_y = Expression(SymbolList, factor)
                 fseries = (data_y, 0, max_exponent.get_int_value(), 1)
             series_new = series_times_series(series, fseries)
-            print("  ->", series_new, "?")
             if series_new:
                 series = series_new
             else:
@@ -1858,7 +1839,6 @@ class SeriesData(Builtin):
         )
 
     def pre_makeboxes(self, x, x0, data, nmin, nmax, den, form, evaluation):
-        form_str = form.get_name()
         if x0.is_zero:
             variable = x
         else:

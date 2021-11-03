@@ -1,5 +1,5 @@
 from mathics.core.symbols import Symbol, SymbolList
-from mathics.core.atoms import Integer, Integer0, Integer1, Rational, Real, Complex
+from mathics.core.atoms import Integer, Integer0, Rational
 from mathics.core.expression import Expression
 from mathics.core.rules import Pattern
 from mathics.core.systemsymbols import (
@@ -8,11 +8,8 @@ from mathics.core.systemsymbols import (
     SymbolDirectedInfinity,
     SymbolIndeterminate,
     SymbolInfinity,
-    SymbolInteger,
     SymbolPlus,
     SymbolPower,
-    SymbolRational,
-    SymbolSequence,
     SymbolTimes,
 )
 
@@ -270,7 +267,6 @@ def reduce_series(series):
     series = reduce_series_trailing_zeros(series)
 
     def factors(den):
-        factors = []
         # TODO: extend the list of primes?
         for factor in [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]:
             if den < factor:
@@ -360,76 +356,6 @@ def reduce_series_plus(series, terms, x, x0):
             return None, None
     series = reduce_series(series)
     return series, other_terms
-
-
-def reduce_series_product(series, coeff, x, x0):
-    """
-    Tries to reduce the product of a Series with an Expression or a Sequence of Expressions expr.
-    """
-    old_series, old_coeff = series, coeff
-    coeff_head = coeff.get_head()
-    other_factors = []
-    if coeff_head is SymbolSequence:
-        factors = coeff.leaves
-    else:
-        factors = [coeff]
-
-    for factor in factors:
-        factor_head = factor.get_head()
-        if factor.is_numeric():
-            newdata = Expression(
-                SymbolList, *(factor * leaf for leaf in series[0].leaves)
-            )
-            series = (newdata, *series[1:])
-            continue
-        if factor.is_atom():
-            other_factors.extend([factor])
-            continue
-        factor_leaves = factor.leaves
-        if factor_head is SymbolSeriesData:
-            y, y0, data, nummin, nummax, den = factor_leaves
-            if x.sameQ(y) and x0.sameQ(y0):
-                new_series = _series_times_series(
-                    series,
-                    (
-                        data,
-                        nummin.get_int_value(),
-                        nummax.get_int_value(),
-                        den.get_int_value(),
-                    ),
-                )
-                if new_series:
-                    series = new_series
-                    continue
-        elif factor_head is SymbolPower and len(factor_leaves) == 2:
-            base, exponent = factor_leaves
-            exponent_head = exponent.get_head()
-            if same_monomial(base, x, x0):
-                if exponent_head is SymbolInteger:
-                    series = (
-                        series[0],
-                        series[1] + exponent.get_int_value(),
-                        series[2:],
-                    )
-                elif exponent_head is SymbolRational:
-                    new_series = _series_times_rational_power(
-                        series, *(exponent.value.as_numer_denom())
-                    )
-                    if new_series:
-                        series = new_series
-                        continue
-        other_factors.append(factor)
-    # Collect all the `other_factors` in a single factor:
-    if other_factors:
-        if len(other_factors) == 1:
-            coeff = other_factors[0]
-        else:
-            coeff = Expression(SymbolTimes, *other_factors)
-    else:
-        coeff = None
-    if series is old_series and coeff.sameQ(old_coeff):
-        return None, None
-    return reduce_series(series), coeff
 
 
 def build_series(f, x, x0, n, evaluation):
