@@ -6,7 +6,7 @@ Number theoretic functions
 
 import sympy
 
-from mathics.version import __version__  # noqa used in loading to check consistency.
+
 from mathics.builtin.base import Builtin, SympyFunction
 from mathics.core.expression import Expression
 from mathics.core.symbols import Symbol
@@ -323,7 +323,7 @@ class IntegerExponent(Builtin):
         while py_n % (py_b ** result) == 0:
             result += 1
 
-        return from_python(result - 1)
+        return Integer(result - 1)
 
 
 class MantissaExponent(Builtin):
@@ -497,7 +497,7 @@ class NextPrime(Builtin):
         py_n = n.to_python(n_evaluation=evaluation)
 
         if py_k >= 0:
-            return from_python(sympy.ntheory.nextprime(py_n, py_k))
+            return Integer(sympy.ntheory.nextprime(py_n, py_k))
 
         # Hack to get earlier primes
         result = n.to_python()
@@ -506,9 +506,9 @@ class NextPrime(Builtin):
                 result = sympy.ntheory.prevprime(result)
             except ValueError:
                 # No earlier primes
-                return from_python(-1 * sympy.ntheory.nextprime(0, py_k - i))
+                return Integer(-1 * sympy.ntheory.nextprime(0, py_k - i))
 
-        return from_python(result)
+        return Integer(result)
 
 
 class PartitionsP(SympyFunction):
@@ -604,7 +604,7 @@ class PrimePi(SympyFunction):
     def apply(self, n, evaluation):
         "PrimePi[n_?NumericQ]"
         result = sympy.ntheory.primepi(n.to_python(n_evaluation=evaluation))
-        return from_python(result)
+        return Integer(result)
 
 
 class PrimePowerQ(Builtin):
@@ -748,7 +748,7 @@ class RandomPrime(Builtin):
 
         try:
             if py_n == 1:
-                return from_python(sympy.ntheory.randprime(imin, imax + 1))
+                return Integer(sympy.ntheory.randprime(imin, imax + 1))
             return from_python(
                 [sympy.ntheory.randprime(imin, imax + 1) for i in range(py_n)]
             )
