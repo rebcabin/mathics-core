@@ -1333,11 +1333,10 @@ class Expression(BaseExpression):
         return (self._head, self._leaves)
 
 
-# This function allows to avoid a circular reference when we want
-# to create `Expression` objects in the `mathics.core.symbols` and `mathics.core.atoms` modules.
-
-
 def _create_expression(self, head, *leaves):
+    """
+    This avoids a circular imports by allowing creation of Expression objects in mathics.core.symbols and mathics.core.atoms modules.
+    """
     return Expression(head, *leaves)
 
 
