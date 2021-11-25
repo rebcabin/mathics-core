@@ -876,10 +876,10 @@ class Expression(BaseExpression):
                             rules_names.add(name)
                             for rule in evaluation.definitions.get_upvalues(name):
                                 yield rule
-            if new.get_head_name() == "System`N":
-                lookup_name = leaves[0].get_lookup_name()
-                for rule in evaluation.definitions.get_nvalues(lookup_name):
-                    yield rule
+            #            if new.get_head() is SymbolN:
+            #                lookup_name = leaves[0].get_lookup_name()
+            #                for rule in evaluation.definitions.get_nvalues(lookup_name):
+            #                    yield rule
 
             lookup_name = new.get_lookup_name()
             if lookup_name == new.get_head_name():
