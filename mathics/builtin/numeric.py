@@ -88,7 +88,7 @@ def apply_N(expr, evaluation, prec=SymbolMachinePrecision):
     if isinstance(expr, String):
         return expr
 
-    if expr.get_head() in (SymbolList, SymbolRule, SymbolRuleDelayed):
+    if expr.get_head() in (SymbolList, SymbolRule):
         newleaves = [apply_N(leaf, evaluation, prec) for leaf in expr.leaves]
         return Expression(
             expr.head,
