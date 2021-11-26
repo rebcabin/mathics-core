@@ -1231,7 +1231,7 @@ class Expression(BaseExpression):
             *[
                 leaf.replace_vars(vars, options=options, in_scoping=in_scoping)
                 for leaf in leaves
-            ],
+            ]
         )
 
     def replace_slots(self, slots, evaluation):
@@ -1259,7 +1259,7 @@ class Expression(BaseExpression):
             return self
         return Expression(
             self._head.replace_slots(slots, evaluation),
-            *[leaf.replace_slots(slots, evaluation) for leaf in self._leaves],
+            *[leaf.replace_slots(slots, evaluation) for leaf in self._leaves]
         )
 
     def thread(self, evaluation, head=None) -> typing.Tuple[bool, "Expression"]:
