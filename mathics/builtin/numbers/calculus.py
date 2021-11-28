@@ -2,8 +2,10 @@
 
 """
 Calculus
+
+Originally called infinitesimal calculus or "the calculus of infinitesimals", is the mathematical study of continuous change, in the same way that geometry is the study of shape and algebra is the study of generalizations of arithmetic operations.
 """
-from mathics.version import __version__  # noqa used in loading to check consistency.
+
 
 from mathics.builtin.base import Builtin, PostfixOperator, SympyFunction
 from mathics.core.expression import Expression
@@ -60,14 +62,17 @@ IntegerMinusOne = Integer(-1)
 class D(SympyFunction):
     """
     <dl>
-    <dt>'D[$f$, $x$]'
-        <dd>gives the partial derivative of $f$ with respect to $x$.
-    <dt>'D[$f$, $x$, $y$, ...]'
-        <dd>differentiates successively with respect to $x$, $y$, etc.
-    <dt>'D[$f$, {$x$, $n$}]'
-        <dd>gives the multiple derivative of order $n$.
-    <dt>'D[$f$, {{$x1$, $x2$, ...}}]'
-        <dd>gives the vector derivative of $f$ with respect to $x1$, $x2$, etc.
+      <dt>'D[$f$, $x$]'
+      <dd>gives the partial derivative of $f$ with respect to $x$.
+
+      <dt>'D[$f$, $x$, $y$, ...]'
+      <dd>differentiates successively with respect to $x$, $y$, etc.
+
+      <dt>'D[$f$, {$x$, $n$}]'
+      <dd>gives the multiple derivative of order $n$.
+
+      <dt>'D[$f$, {{$x1$, $x2$, ...}}]'
+      <dd>gives the vector derivative of $f$ with respect to $x1$, $x2$, etc.
     </dl>
 
     First-order derivative of a polynomial:
@@ -176,6 +181,8 @@ class D(SympyFunction):
             "Nest[Function[{t}, D[t, x]], expr, n]"
         ),
     }
+
+    summary_text = "partial derivatives of scalar or vector functions"
 
     def apply(self, f, x, evaluation):
         "D[f_, x_?NotListQ]"
@@ -304,10 +311,11 @@ class D(SympyFunction):
 class Derivative(PostfixOperator, SympyFunction):
     """
     <dl>
-    <dt>'Derivative[$n$][$f$]'
-        <dd>represents the $n$th derivative of the function $f$.
-    <dt>'Derivative[$n1$, $n2$, ...][$f$]'
-        <dd>represents a multivariate derivative.
+      <dt>'Derivative[$n$][$f$]'
+      <dd>represents the $n$th derivative of the function $f$.
+
+      <dt>'Derivative[$n1$, $n2$, ...][$f$]'
+      <dd>represents a multivariate derivative.
     </dl>
 
     >> Derivative[1][Sin]
@@ -408,6 +416,8 @@ class Derivative(PostfixOperator, SympyFunction):
             Sequence @@ Table[{Slot[i], {n}[[i]]}, {i, 1, Length[{n}]}]]]&""",
     }
 
+    summary_text = "symbolic and numerical derivative functions"
+
     default_formats = False
 
     def __init__(self, *args, **kwargs):
@@ -455,10 +465,11 @@ class Derivative(PostfixOperator, SympyFunction):
 class Integrate(SympyFunction):
     r"""
     <dl>
-    <dt>'Integrate[$f$, $x$]'
-        <dd>integrates $f$ with respect to $x$. The result does not contain the additive integration constant.
-    <dt>'Integrate[$f$, {$x$, $a$, $b$}]'
-        <dd>computes the definite integral of $f$ with respect to $x$ from $a$ to $b$.
+      <dt>'Integrate[$f$, $x$]'
+      <dd>integrates $f$ with respect to $x$. The result does not contain the additive integration constant.
+
+      <dt>'Integrate[$f$, {$x$, $a$, $b$}]'
+      <dd>computes the definite integral of $f$ with respect to $x$ from $a$ to $b$.
     </dl>
 
     Integrate a polynomial:
@@ -541,8 +552,6 @@ class Integrate(SympyFunction):
     # = t / 2
     attributes = ("ReadProtected",)
 
-    sympy_name = "Integral"
-
     options = {
         "Assumptions": "$Assumptions",
         "GenerateConditions": "Automatic",
@@ -564,6 +573,9 @@ class Integrate(SympyFunction):
                 MakeBoxes[b, form]], "\[InvisibleTimes]" , MakeBoxes[f, form], "\[InvisibleTimes]",
                 RowBox[{"\[DifferentialD]", MakeBoxes[x, form]}]}]""",
     }
+
+    summary_text = "symbolic integrals in one or more dimensions"
+    sympy_name = "Integral"
 
     def prepare_sympy(self, leaves):
         if len(leaves) == 2:
@@ -763,10 +775,11 @@ class Root(SympyFunction):
 class Solve(Builtin):
     """
     <dl>
-    <dt>'Solve[$equation$, $vars$]'
-        <dd>attempts to solve $equation$ for the variables $vars$.
-    <dt>'Solve[$equation$, $vars$, $domain$]'
-        <dd>restricts variables to $domain$, which can be 'Complexes' or 'Reals' or 'Integers'.
+      <dt>'Solve[$equation$, $vars$]'
+      <dd>attempts to solve $equation$ for the variables $vars$.
+
+      <dt>'Solve[$equation$, $vars$, $domain$]'
+      <dd>restricts variables to $domain$, which can be 'Complexes' or 'Reals' or 'Integers'.
     </dl>
 
     >> Solve[x ^ 2 - 3 x == 4, x]
@@ -836,7 +849,7 @@ class Solve(Builtin):
      = {{x -> -1}, {x -> 1}}
 
     #> Solve[x^2 +1 == 0, x] // FullForm
-     = List[List[Rule[x, Complex[0, -1]]], List[Rule[x, Complex[0, 1]]]]
+     = {{Rule[x, Complex[0, -1]]},{Rule[x, Complex[0, 1]]}}
 
     #> Solve[x^5==x,x]
      = {{x -> -1}, {x -> 0}, {x -> 1}, {x -> -I}, {x -> I}}
@@ -873,6 +886,8 @@ class Solve(Builtin):
             "Cases[Solve[eqs, vars], {Rule[x_,y_Integer]}]"
         ),
     }
+
+    summary_text = "find generic solutions for variables"
 
     def apply(self, eqs, vars, evaluation):
         "Solve[eqs_, vars_]"
@@ -1061,12 +1076,14 @@ class Complexes(Builtin):
 class Limit(Builtin):
     """
     <dl>
-    <dt>'Limit[$expr$, $x$->$x0$]'
-        <dd>gives the limit of $expr$ as $x$ approaches $x0$.
-    <dt>'Limit[$expr$, $x$->$x0$, Direction->1]'
-        <dd>approaches $x0$ from smaller values.
-    <dt>'Limit[$expr$, $x$->$x0$, Direction->-1]'
-        <dd>approaches $x0$ from larger values.
+      <dt>'Limit[$expr$, $x$->$x0$]'
+      <dd>gives the limit of $expr$ as $x$ approaches $x0$.
+
+      <dt>'Limit[$expr$, $x$->$x0$, Direction->1]'
+      <dd>approaches $x0$ from smaller values.
+
+      <dt>'Limit[$expr$, $x$->$x0$, Direction->-1]'
+      <dd>approaches $x0$ from larger values.
     </dl>
 
     >> Limit[x, x->2]
@@ -1098,6 +1115,8 @@ class Limit(Builtin):
     messages = {
         "ldir": "Value of Direction -> `1` should be -1 or 1.",
     }
+
+    summary_text = "directed and undirected limits"
 
     def apply(self, expr, x, x0, evaluation, options={}):
         "Limit[expr_, x_->x0_, OptionsPattern[Limit]]"
@@ -1138,8 +1157,8 @@ class Limit(Builtin):
 class DiscreteLimit(Builtin):
     """
     <dl>
-    <dt>'DiscreteLimit[$f$, $k$->Infinity]'
-        <dd>gives the limit of the sequence $f$ as $k$ tends to infinity.
+      <dt>'DiscreteLimit[$f$, $k$->Infinity]'
+      <dd>gives the limit of the sequence $f$ as $k$ tends to infinity.
     </dl>
 
     >> DiscreteLimit[n/(n + 1), n -> Infinity]
@@ -1164,6 +1183,8 @@ class DiscreteLimit(Builtin):
     messages = {
         "dltrials": "The value of Trials should be a positive integer",
     }
+
+    summary_text = "limits of sequences including recurrence and number theory"
 
     def apply(self, f, n, n0, evaluation, options={}):
         "DiscreteLimit[f_, n_->n0_, OptionsPattern[DiscreteLimit]]"
@@ -1477,9 +1498,9 @@ class FindRoot(Builtin):
 class O_(Builtin):
     """
     <dl>
-    <dt>'O[$x$]^n'
-        <dd> Represents a term of order $x^n$.
-        <dd> O[x]^n is generated to represent omitted higher order terms in power series.
+      <dt>'O[$x$]^n'
+      <dd> Represents a term of order $x^n$.
+      <dd> O[x]^n is generated to represent omitted higher order terms in power series.
     </dl>
 
     >> Series[1/(1-x),{x,0,2}]
@@ -1487,7 +1508,7 @@ class O_(Builtin):
 
     When called alone, a `SeriesData` expression is built:
     >> O[x] // FullForm
-     = SeriesData[x, 0, List[], 1, 1, 1]
+     = SeriesData[x, 0, {}, 1, 1, 1]
 
     """
 
@@ -1495,26 +1516,29 @@ class O_(Builtin):
     rules = {
         "O[x_Symbol]": "SeriesData[x, 0, {}, 1, 1, 1]",
     }
+    summary_text = "symbolic representation of a higher-order series term"
 
 
 class Series(Builtin):
     """
     <dl>
-    <dt>'Series[$f$, {$x$, $x0$, $n$}]'
-        <dd>Represents the series expansion around '$x$=$x0$' up to order $n$.
+      <dt>'Series[$f$, {$x$, $x0$, $n$}]'
+      <dd>Represents the series expansion around '$x$=$x0$' up to order $n$.
     </dl>
-    For elementary expressions, `Series` returns the explicit power series as a `SeriesData` expression:
+
+    For elementary expressions, 'Series' returns the explicit power series as a 'SeriesData' expression:
     >> Series[Exp[x], {x,0,2}]
      = 1 + x + 1 / 2 x ^ 2 + O[x] ^ 3
     >> % // FullForm
-     = SeriesData[x, 0, List[1, 1, Rational[1, 2]], 0, 3, 1]
-    Replacing the variable by a value, the Series will not be evaluated as
-    an expression, but as a SeriesData object:
+     = SeriesData[x, 0, {1,1,Rational[1, 2]}, 0, 3, 1]
+    Replacing the variable by a value, the series will not be evaluated as
+    an expression, but as a 'SeriesData' object:
     >> s = Series[Exp[x^2],{x,0,2}]
      = 1 + x ^ 2 + O[x] ^ 3
     >> s /. x->4
      = 1 + 4 ^ 2 + O[4] ^ 3
-    ``Normal`` transforms a ``SeriesData`` expression into a polinomial:
+
+    'Normal' transforms a 'SeriesData' expression into a polynomial:
     >> s // Normal
      = 1 + x ^ 2
     >> (s // Normal) /. x-> 4
@@ -1531,6 +1555,7 @@ class Series(Builtin):
         "serlim": "Series order specification `1` is not a machine-sized integer.",
         "sspec": "Series specification `1` is not a list with three elements.",
     }
+    summary_text = "power series and asymptotic expansions"
 
     def apply_series(self, f, x, x0, n, evaluation):
         """Series[f_, {x_Symbol, x0_, n_Integer}]"""
@@ -1574,6 +1599,7 @@ class SeriesData(Builtin):
      = -x + a x ^ 2 + O[x] ^ 3
     """
 
+    summary_text = "Mathics representation Power series"
     precedence = 1000
 
     def apply_reduce(self, x, x0, data, nummin, nummax, den, evaluation):
