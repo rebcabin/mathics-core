@@ -17,7 +17,6 @@ from io import BytesIO
 import os.path as osp
 from itertools import chain
 
-from mathics.version import __version__  # noqa used in loading to check consistency.
 
 from mathics_scanner import TranslateError
 from mathics.core.parser import MathicsFileLineFeeder, parse
@@ -475,17 +474,17 @@ class Read(Builtin):
 
         for typ in types.leaves:
             try:
-                if typ == Symbol("Byte"):
+                if typ is Symbol("Byte"):
                     tmp = stream.io.read(1)
                     if tmp == "":
                         raise EOFError
                     result.append(ord(tmp))
-                elif typ == Symbol("Character"):
+                elif typ is Symbol("Character"):
                     tmp = stream.io.read(1)
                     if tmp == "":
                         raise EOFError
                     result.append(tmp)
-                elif typ == Symbol("Expression") or typ == Symbol("HoldExpression"):
+                elif typ is Symbol("Expression") or typ is Symbol("HoldExpression"):
                     tmp = next(read_record)
                     while True:
                         try:
@@ -502,20 +501,20 @@ class Read(Builtin):
                         except Exception as e:
                             print(e)
 
-                    if expr == SymbolEndOfFile:
+                    if expr is SymbolEndOfFile:
                         evaluation.message(
                             "Read", "readt", tmp, Expression("InputSteam", name, n)
                         )
                         return SymbolFailed
                     elif isinstance(expr, BaseExpression):
-                        if typ == Symbol("HoldExpression"):
+                        if typ is Symbol("HoldExpression"):
                             expr = Expression("Hold", expr)
                         result.append(expr)
                     # else:
                     #  TODO: Supposedly we can't get here
                     # what code should we put here?
 
-                elif typ == Symbol("Number"):
+                elif typ is Symbol("Number"):
                     tmp = next(read_number)
                     try:
                         tmp = int(tmp)
@@ -529,7 +528,7 @@ class Read(Builtin):
                             return SymbolFailed
                     result.append(tmp)
 
-                elif typ == Symbol("Real"):
+                elif typ is Symbol("Real"):
                     tmp = next(read_real)
                     tmp = tmp.replace("*^", "E")
                     try:
@@ -540,14 +539,14 @@ class Read(Builtin):
                         )
                         return SymbolFailed
                     result.append(tmp)
-                elif typ == Symbol("Record"):
+                elif typ is Symbol("Record"):
                     result.append(next(read_record))
-                elif typ == Symbol("String"):
+                elif typ is Symbol("String"):
                     tmp = stream.io.readline()
                     if len(tmp) == 0:
                         raise EOFError
                     result.append(tmp.rstrip("\n"))
-                elif typ == Symbol("Word"):
+                elif typ is Symbol("Word"):
                     result.append(next(read_word))
 
             except EOFError:
@@ -608,7 +607,7 @@ class Write(Builtin):
         expr = Expression("Row", Expression("List", *expr))
 
         evaluation.format = "text"
-        text = evaluation.format_output(from_python(expr))
+        text = evaluation.format_output(expr)
         stream.io.write(str(text) + "\n")
         return SymbolNull
 
@@ -1900,7 +1899,7 @@ class Get(PrefixOperator):
             trace_get = evaluation.parse("Settings`$TraceGet")
             if (
                 options["System`Trace"].to_python()
-                or trace_get.evaluate(evaluation) == SymbolTrue
+                or trace_get.evaluate(evaluation) is SymbolTrue
             ):
                 import builtins
 
@@ -2213,10 +2212,10 @@ class ReadList(Read):
             if tmp is None:
                 return
 
-            if tmp == SymbolFailed:
+            if tmp is SymbolFailed:
                 return
 
-            if tmp == SymbolEndOfFile:
+            if tmp is SymbolEndOfFile:
                 break
             result.append(tmp)
         return from_python(result)
@@ -2244,7 +2243,7 @@ class ReadList(Read):
         for i in range(py_m):
             tmp = super(ReadList, self).apply(channel, types, evaluation, options)
 
-            if tmp == SymbolFailed:
+            if tmp is SymbolFailed:
                 return
 
             if tmp.to_python() == "EndOfFile":
@@ -2333,7 +2332,7 @@ class FilePrint(Builtin):
             result = result[:-1]
 
         for res in result:
-            evaluation.print_out(from_python(res))
+            evaluation.print_out(String(res))
 
         return SymbolNull
 
@@ -2416,7 +2415,7 @@ class StreamPosition(Builtin):
             evaluation.message("General", "openx", name)
             return
 
-        return from_python(stream.io.tell())
+        return Integer(stream.io.tell())
 
     def apply_output(self, name, n, evaluation):
         "StreamPosition[OutputStream[name_, n_]]"
@@ -2498,7 +2497,7 @@ class SetStreamPosition(Builtin):
         except IOError:
             evaluation.message("SetStreamPosition", "seek")
 
-        return from_python(stream.io.tell())
+        return Integer(stream.io.tell())
 
     def apply_output(self, name, n, m, evaluation):
         "SetStreamPosition[OutputStream[name_, n_], m_]"
@@ -2580,7 +2579,7 @@ class Skip(Read):
             return
         for i in range(py_m):
             result = super(Skip, self).apply(channel, types, evaluation, options)
-            if result == SymbolEndOfFile:
+            if result is SymbolEndOfFile:
                 return result
         return SymbolNull
 
