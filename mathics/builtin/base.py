@@ -424,7 +424,9 @@ class Operator(Builtin):
     def get_operator(self) -> typing.Optional[str]:
         return self.operator
 
-    def get_operator_display(self) -> typing.Optional[str]:
+    def get_operator_display(self, supports_unicode=False) -> typing.Optional[str]:
+        if supports_unicode and hasattr(self, "unicode_equivalent"):
+            return self.operator_equivalent
         if hasattr(self, "operator_display"):
             return self.operator_display
         else:
